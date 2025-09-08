@@ -16,9 +16,48 @@ Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Bo
   //        // todo: find and apply force only on the closest mates
   //    }
 
-  separatingForce = Vector2f::normalized(separatingForce);
 
-  return separatingForce;
+  Vector2f sumOfForces = Vector2f::zero();
+
+  for(int i = 0; i < neighborhood.size(); i++)
+  {
+    // if i is not the current boid continue
+    if (neighborhood[i] != boid)
+    {
+      // calculate the difference from the current boid to its neighbor
+      Vector2f difference = boid->getPosition() - neighborhood[i]->getPosition();
+
+      if (difference.getMagnitude() <= desiredMinimalDistance)
+      {
+        //For each neighbor, calculate a repulsion force inversely proportional to distance
+
+        double distance = difference.getMagnitude();
+
+        if (distance < 0.01)
+        {
+          distance = 0.01;
+        }
+
+        Vector2f unitVector = difference / distance;
+        double repulsionMagnitude = getBaseWeightMultiplier() / distance;
+        Vector2f repulsionForce = unitVector * repulsionMagnitude;
+
+        sumOfForces += repulsionForce;
+
+      }
+    }
+  }
+
+  if (sumOfForces.getMagnitude() > desiredMinimalDistance)
+  {
+    Vector2f forcesNormalised = sumOfForces.normalized();
+    Vector2f clampedForce = forcesNormalised * desiredMinimalDistance;
+    return clampedForce;
+  }
+  else
+    return sumOfForces;
+
+
 }
 
 bool SeparationRule::drawImguiRuleExtra() {

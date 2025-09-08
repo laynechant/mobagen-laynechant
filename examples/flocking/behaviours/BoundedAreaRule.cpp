@@ -9,7 +9,42 @@ Vector2f BoundedAreaRule::computeForce(const std::vector<Boid*>& neighborhood, B
 
   // todo: add here your code code here do make the boid follow the bounded box rule
   // hint: use this->world->engine->window->size() and desiredDistance
+  // get the window size
+  auto windowSize = this->world->engine->window->size();
 
+  float leftBoundary =   boid->getPosition().x - 0;
+  float topBoundary =   windowSize.y - boid->getPosition().y;
+
+  float rightBoundary =   windowSize.x - boid->getPosition().x;
+  float bottomBoundary =   boid->getPosition().y - 0;
+
+  Vector2f repulsionDirection = Vector2f::zero();
+
+  // if the boid approaches a specific side of the boundary calculate an appriate force and magnitude to apply to the boid
+   if (rightBoundary < desiredDistance) {
+
+      repulsionDirection = Vector2f(-1, 0);
+      float repulsionMagnitude = getBaseWeightMultiplier() / rightBoundary;
+      force += repulsionDirection * repulsionMagnitude;
+   }
+
+  if (leftBoundary < desiredDistance) {
+    repulsionDirection = Vector2f(1, 0);
+    float repulsionMagnitude = getBaseWeightMultiplier() / leftBoundary;
+    force += repulsionDirection * repulsionMagnitude;
+  }
+
+  if (topBoundary < desiredDistance) {
+    repulsionDirection = Vector2f(0, -1);
+    float repulsionMagnitude = getBaseWeightMultiplier() / topBoundary;
+    force += repulsionDirection * repulsionMagnitude;
+  }
+
+  if (bottomBoundary < desiredDistance) {
+    repulsionDirection = Vector2f(0, 1);
+    float repulsionMagnitude = getBaseWeightMultiplier() / bottomBoundary;
+    force += repulsionDirection * repulsionMagnitude;
+  }
   return force;
 }
 
