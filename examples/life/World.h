@@ -24,6 +24,7 @@ public:
   void SetNext(Point2D point, bool value);
   void SetCurrent(Point2D point, bool value);
   void Randomize();
+  Point2D const WrapCoordinates(Point2D point);
 };
 
 #endif  // MOBAGEN_WORLD_H
