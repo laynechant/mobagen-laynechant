@@ -19,6 +19,11 @@ public:
   std::string GetName() override { return "HuntAndKill"; };
   bool Step(World* world) override;
   void Clear(World* world) override;
+
+  Point2D currentCell;
+  Point2D huntPos;
+  bool huntPhase;
+  bool complete;
 };
 
 #endif  // HUNTANDKILLEXAMPLE_H
