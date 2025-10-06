@@ -28,6 +28,8 @@ std::vector<Point2D> Agent::generatePath(World* w) {
     // for every neighbor set the cameFrom
     // enqueue the neighbors to frontier and frontier set
     // do this up to find a visitable border and break the loop
+    // heuristic
+    // (sideSize/2) - max(abs(p.x), abs(p.y))
 
 
     frontier.pop();
