@@ -3,6 +3,7 @@
 
 #include "Agent.h"
 
+// Todo:: What Functions does this class need?
 class Catcher : public Agent {
 public:
   explicit Catcher() : Agent(){};
