@@ -70,7 +70,7 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   }
 }
 
-
+// Finds all visitable neighbors by looping through a vector of offsets in order to find ones that neighbor the given point
 std::vector<Point2D> Agent::getVisitableNeighbors(World* w, const Point2D& current) {
 
   vector<Point2D> neighbors;
@@ -93,6 +93,7 @@ std::vector<Point2D> Agent::getVisitableNeighbors(World* w, const Point2D& curre
   return neighbors;
 }
 
+// finds border points by adding offsets and checking whether the point is valid or not
 bool Agent::isBorderPoint(World* w, const Point2D& current) {
 
   vector<Point2D> offsets;

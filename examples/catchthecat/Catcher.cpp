@@ -11,7 +11,7 @@ Point2D Catcher::Move(World* world) {
   int sideSize = world->getWorldSideSize();
 
   if (path.size() >= 2) {
-
+    // initializes the border positions vector with valid border positions
     Point2D currentPos = {0,0};
     if (!isInitialized)
     {
@@ -24,16 +24,12 @@ Point2D Catcher::Move(World* world) {
           }
         }
       }
-      /*std::cout << "Found " << borderPositions.size() << " border positions\n";
-      if (borderPositions.size() > 0) {
-        std::cout << "First border cell: (" << borderPositions[0].x << ", " << borderPositions[0].y << ")\n";
-      }*/
       isInitialized = true;
     }
-
+    // loops through the vector to block 70 % of the border positions
     while (borderIndex < borderPositions.size() * 0.7) {
       auto currentBorderCell = borderPositions[borderIndex];
-
+      // if the positions are valid (not blocked and not the cats pos) block them
       if (!world->getContent(currentBorderCell) && currentBorderCell != world->getCat()) {
         borderIndex++;
         return currentBorderCell;
@@ -41,6 +37,7 @@ Point2D Catcher::Move(World* world) {
       borderIndex++;
 
     }
+      // after blocking border positions switch to focusing on the cat
       if (path.size() >= 1) {
         for(int i = path.size() - 2; i >= 0; --i) {
           Point target = path.at(i);
@@ -50,6 +47,7 @@ Point2D Catcher::Move(World* world) {
           }
         }
       }
+        // if that fails just fall back to randomly selected cells to block
         auto side = world->getWorldSideSize() / 2;
         for (;;) {
 
@@ -92,6 +90,7 @@ std::vector<Point> Catcher::pathAStar(World* w, Point start) {
 
     Point2DPrioritized neighbor;
 
+    // loops through all visitable neighbors to find the ones that haven't been visited or have low cost
     for (auto next : visitableNeighbors) {
       int newCost = costSoFar[current.pos] + 1;
         if ( !visited[{next.x, next.y}] && (!cameFrom.contains({next.x, next.y}) || newCost < costSoFar[{next.x, next.y}])) {
@@ -118,6 +117,8 @@ std::vector<Point> Catcher::pathAStar(World* w, Point start) {
 
   return path;
 }
+
+// finds the distance from the given position to the border
 int Catcher::heuristic(World* world, Point p) {
   auto side = world->getWorldSideSize() / 2;
 
