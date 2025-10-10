@@ -17,8 +17,8 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   frontier.push(catPos);
   frontierSet.insert(catPos);
   Point2D borderExit = Point2D::INFINITE;  // if at the end of the loop we don't find a border, we have to return random points
-  Point2D current = frontier.front();
 
+  Point2D current;
   while (!frontier.empty()) {
     // get the current from frontier
     // remove the current from frontier set
@@ -28,10 +28,9 @@ std::vector<Point2D> Agent::generatePath(World* w) {
     // for every neighbor set the cameFrom
     // enqueue the neighbors to frontier and frontier set
     // do this up to find a visitable border and break the loop
-    // heuristic
-    // (sideSize/2) - max(abs(p.x), abs(p.y))
 
 
+    current = frontier.front();
     frontier.pop();
     visited[current] = true;
 
@@ -43,7 +42,6 @@ std::vector<Point2D> Agent::generatePath(World* w) {
             borderExit = current;
            break;
          }
-
         cameFrom.insert({neighbor, current});
         frontier.push(neighbor);
         frontierSet.insert(neighbor);
@@ -70,10 +68,9 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   {
     return {};
   }
-
 }
 
-// this function should return a vector of visitable neighbors
+
 std::vector<Point2D> Agent::getVisitableNeighbors(World* w, const Point2D& current) {
 
   vector<Point2D> neighbors;
@@ -89,7 +86,7 @@ std::vector<Point2D> Agent::getVisitableNeighbors(World* w, const Point2D& curre
   for (auto offsetPoint : offsets) {
     const Point2D point = Point2D(current.x + offsetPoint.x, current.y + offsetPoint.y);
 
-    if (w->isNeighbor(current,point)) {
+    if (w->isNeighbor(current,point) && !w->getContent(point)) {
       neighbors.push_back(point);
     }
   }

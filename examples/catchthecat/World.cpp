@@ -158,6 +158,8 @@ void World::OnGui(ImGuiContext* context) {
   ImGui::End();
 
   if ((catcherWon || catWon)) {
+    if (catWon) std::cout << "Cat Won !!" << std::endl;
+    if (catcherWon) std::cout << "Catcher Won !!" << std::endl;
     ImGuiIO& io = ImGui::GetIO();
     ImVec2 pos(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f);
     ImGui::SetNextWindowPos(pos, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
@@ -183,6 +185,7 @@ Point2D World::getCat() { return catPosition; }
 
 void World::step() {
   if (catWon || catcherWon) {
+
     clearWorld();
     return;
   }
