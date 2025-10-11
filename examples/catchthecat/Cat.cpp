@@ -11,9 +11,11 @@ Point2D Cat::Move(World* world) {
 
     auto index = catsPath.size() - 2;
     Point2D nextMove = catsPath[index];
+
     // if positions are being repeated get all the visitable neighbors and set a new viable position
     if (nextMove == previousPos) {
         std::vector<Point2D> neighbors = getVisitableNeighbors(world, currentPos);
+
       for (const auto& neighbor : neighbors) {
         if (neighbor != previousPos && !world->getContent(neighbor)) {
           nextMove = neighbor;
@@ -22,6 +24,8 @@ Point2D Cat::Move(World* world) {
       }
     }
     // if the positons is not repeated use that position
+    auto neighbors = getVisitableNeighbors(world, currentPos);
+
     previousPos = currentPos;
     return nextMove;
 }

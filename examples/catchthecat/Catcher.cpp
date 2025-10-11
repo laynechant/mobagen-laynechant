@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <limits>
 
-
 Point2D Catcher::Move(World* world) {
 
   std::vector<Point> path = pathAStar(world, Point(world->getCat().x, world->getCat().y));
@@ -26,8 +25,19 @@ Point2D Catcher::Move(World* world) {
       }
       isInitialized = true;
     }
-    // loops through the vector to block 70 % of the border positions
-    while (borderIndex < borderPositions.size() * 0.7) {
+
+    // focus on cutting off the cats closet border
+    if (path.size() >= 1) {
+
+      Point borderPath = path[0];
+      Point2D borderCell = {borderPath.x, borderPath.y};
+
+      if(!world->getContent(borderCell) && borderCell != world->getCat()) {
+        return borderCell;
+      }
+    }
+    // loops through the vector to block 40 % of the border positions
+    while (borderIndex < borderPositions.size() * 0.4) {
       auto currentBorderCell = borderPositions[borderIndex];
       // if the positions are valid (not blocked and not the cats pos) block them
       if (!world->getContent(currentBorderCell) && currentBorderCell != world->getCat()) {
@@ -37,16 +47,13 @@ Point2D Catcher::Move(World* world) {
       borderIndex++;
 
     }
-      // after blocking border positions switch to focusing on the cat
-      if (path.size() >= 1) {
-        for(int i = path.size() - 2; i >= 0; --i) {
-          Point target = path.at(i);
-          if(!world->getContent(Point2D(target.x, target.y)) && Point2D(target.x, target.y) != world->getCat()) {
-
-            return {target.x, target.y};
-          }
-        }
-      }
+      // third blocking stragety is to find cells along the cats escape path and work from cat towards the border
+      for(int i = path.size() - 3; i >= 0; --i) {
+       Point target = path.at(i);
+       if(!world->getContent(Point2D(target.x, target.y)) && Point2D(target.x, target.y) != world->getCat()) {
+         return {target.x, target.y};
+       }
+     }
         // if that fails just fall back to randomly selected cells to block
         auto side = world->getWorldSideSize() / 2;
         for (;;) {
